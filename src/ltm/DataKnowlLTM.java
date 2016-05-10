@@ -31,6 +31,25 @@ public class DataKnowlLTM {
 		convertdataNumToWord(vocab);
 		
 	}
+	public DataKnowlLTM(String domain, double signtopic, double signwordInTopic){
+		Vocab vocab = new Vocab(domain);
+		dtopicdist = new DataLTM("DomainModels/" + domain + "/" + domain + ".dtopicdist", signtopic);
+		ntwdist = new DataLTM("DomainModels/" + domain + "/" + domain + ".twdist", signwordInTopic);
+		ArrayList<ArrayList<Integer>> nTopicInDocuments = dtopicdist.getNData();
+		ArrayList<ArrayList<Integer>> nWordTopic = ntwdist.getNData();
+		
+		dataKnowl = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Integer> idsWordInDocument;
+		for(ArrayList<Integer> listIDsTopic : nTopicInDocuments){
+			idsWordInDocument = new ArrayList<Integer>();
+			for(Integer idword : listIDsTopic){
+				idsWordInDocument.addAll(nWordTopic.get(idword-1));
+			}
+			dataKnowl.add(idsWordInDocument);
+		}
+		convertdataNumToWord(vocab);
+		
+	}
 	
 	public ArrayList<ArrayList<Integer>> getDataKnol(){
 		return dataKnowl;

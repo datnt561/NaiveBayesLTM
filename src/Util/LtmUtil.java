@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class LtmUtil {
 
@@ -56,6 +57,27 @@ public class LtmUtil {
 
 		return listNTopID;
 	}
+	public static ArrayList<ArrayList<Integer>> getNTopIDBySign(ArrayList<HashMap<Integer, Double>> dtopic, double sign) {
+		ArrayList<ArrayList<Integer>> listNTopID = new ArrayList<ArrayList<Integer>>();
+		HashMap<Integer, Double> sortedHashMap;
+		ArrayList<Integer> ids = null;
+		for (HashMap<Integer, Double> hm : dtopic) {
+			sortedHashMap = sortListDoubleByID(hm);
+			ids = new ArrayList<Integer>();
+			for(Entry<Integer, Double> e : sortedHashMap.entrySet()){
+				if(e.getValue() > sign){
+					ids.add(e.getKey());
+				}
+				else{
+					break;
+				}
+			}
+			
+			listNTopID.add(ids);
+		}
+
+		return listNTopID;
+	}
 
 	public static ArrayList<HashMap<Integer, Double>> readFileData(String nameFile) {
 		HashMap<Integer, Double> topicdocumet;
@@ -66,10 +88,19 @@ public class LtmUtil {
 			BufferedReader br = new BufferedReader(fr);
 			int i;
 			String[] probaTopic;
+			int j = 0;
 			while ((line = br.readLine()) != null) {
 				i = 1;
 				topicdocumet = new HashMap<Integer, Double>();
 				probaTopic = line.split(" ");
+				if(probaTopic.length == 0){
+					System.out.println("\n\nnnasdgfdreg  ");
+					break;
+				}
+				else{
+					System.out.println("Length" + probaTopic.length);
+				}
+					
 				for (String s : probaTopic) {
 					topicdocumet.put(new Integer(i), Double.valueOf(s));
 					i++;

@@ -8,6 +8,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 
 
 public class DataNSW extends Data {
@@ -83,15 +85,17 @@ public class DataNSW extends Data {
 	}
 
 	public ArrayList<String> removeStopWords() {
-		ArrayList<String> stopWords = readFileStopWords("stopwords");
+		//ArrayList<String> stopWords = readFileStopWords("stopwords");
 		ArrayList<String> reviews = super.getReviews();
 		ArrayList<String> reviewsNoStopWord = new ArrayList<String>();
 		ArrayList<String> words;
 		String reviewWord;
 		for (String s : reviews) {
 			reviewWord = "";
+			
 			words = Util.Utility.splitReviewtoWords(s);
-			words.removeAll(stopWords);
+			
+			//words.removeAll(stopWords);
 			for (String s1 : words) {
 				reviewWord += s1 + " ";
 			}
@@ -122,5 +126,26 @@ public class DataNSW extends Data {
 		for (Document d : newDatasets) {
 			System.out.println(d.label + "," + d.review);
 		}
+	}
+	
+	public  ArrayList<String> filterWordInReviewByLabel(String label){
+		ArrayList<String> wordByLabel = new ArrayList<String>();
+		String[] listWord;
+		for(Document d : newDatasets){
+			if(d.getLabel().equals(label)){
+				listWord = d.getReview().split(" ");
+				wordByLabel.addAll(Arrays.asList(listWord));
+			}
+		}
+		return wordByLabel;
+	}
+	
+	public ArrayList<Document> filterDocumentByLabel(String label){
+		ArrayList<Document> documents = new ArrayList<Document>();
+		for(Document d : newDatasets){
+			if(d.label.equals(label))
+				documents.add(d);
+		}
+		return documents;
 	}
 }

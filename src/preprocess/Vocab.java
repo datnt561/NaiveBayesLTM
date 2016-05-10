@@ -9,8 +9,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import Util.VocabUtil;
+
 import java.util.Map.Entry;
 
+import data.BalanData;
 import data.DataNSW;
 
 public class Vocab {
@@ -30,6 +34,22 @@ public class Vocab {
 			if (!s.isEmpty())
 				addWord(s);
 		}
+	}
+	public Vocab(BalanData blData){
+		domain = blData.getDomain();
+		vocab =  new HashMap<Integer, String>();
+		Set<String> reviews = createVocaBalan(blData);
+		for (String s : reviews) {
+			if (!s.isEmpty())
+				addWord(s);
+		}
+	}
+	
+	public Vocab(DataNSW d, int n){
+		domain = d.getNameDomain();
+		ArrayList<String> wordPOS = d.filterWordInReviewByLabel("POS");
+		ArrayList<String> wordNEG = d.filterWordInReviewByLabel("NEG");
+		vocab = VocabUtil.newVocab(wordPOS, wordNEG, n);
 	}
 
 	public String searchWordByID(Integer id) {
@@ -78,6 +98,19 @@ public class Vocab {
 
 	public Set<String> createVoca(DataNSW d) {
 		ArrayList<String> reviews = d.getReviewsNewDatasets();
+
+		Set<String> wordInReviews = new HashSet<String>();
+		String[] words;
+		for (String s : reviews) {
+			words = s.split(" ");
+			wordInReviews.addAll(Arrays.asList(words));
+		}
+
+		return wordInReviews;
+	}
+	
+	public Set<String> createVocaBalan(BalanData d) {
+		ArrayList<String> reviews = d.getReviewBalan();
 
 		Set<String> wordInReviews = new HashSet<String>();
 		String[] words;

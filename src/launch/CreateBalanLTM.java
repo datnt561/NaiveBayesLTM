@@ -4,37 +4,36 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import Util.Utility;
-import data.Data;
+import data.BalanData;
 import data.DataNSW;
 import data.Document;
 import data.NameDomains;
 import ltm.DataKnowlLTM;
 import preprocess.Vocab;
 
-public class MainNB_LTM {
+public class CreateBalanLTM {
 
 	public static void main(String[] args) {
 		NameDomains namedomain = new NameDomains("ACL2015-Chen-Datasets");
 		ArrayList<String> listDomain = namedomain.getListNameDomain();
 		for (String s : listDomain) {
-			//Data data = new Data(s);
-			DataNSW dataNSW = new DataNSW(s);
-			//dataNSW.createDataNStopWord();
-			Vocab vocab = new Vocab(dataNSW);
+			// Data data = new Data(s);
+			BalanData bldata = new BalanData(s);
+			// dataNSW.createDataNStopWord();
+			Vocab vocab = new Vocab(bldata);
 
-			DataKnowlLTM dataKnowl = new DataKnowlLTM(s, 0.05, 0.0001);
+			DataKnowlLTM dataKnowl = new DataKnowlLTM(s, 0.04, 0.0001);
 			ArrayList<ArrayList<String>> listtopicInreviews = dataKnowl.getDataKnowlWord();
 			int i = 0;
-			for (Document d : dataNSW.getNewDatasets()) {
+			for (Document d : bldata.getBalanDatasets()) {
 				d.addListWordToReview(listtopicInreviews.get(i));
 				i++;
 
 			}
 			ArrayList<String> vectorFeature = new ArrayList<String>();
 			StringBuffer sb;
-			ArrayList<String> allReview = dataNSW.getReviewsNewDatasets();
-			ArrayList<String> lables = dataNSW.getLables();
-			//dataNSW.writerDataToFile();
+			ArrayList<String> allReview = bldata.getReviewBalan();
+			ArrayList<String> lables = bldata.getLabelsInBalan();
 			ArrayList<String> words;
 			int i1 = 0;
 			ArrayList<String> listwordInVocab = vocab.getWordInVoca();
@@ -52,11 +51,9 @@ public class MainNB_LTM {
 				vectorFeature.add(sb.toString() + lables.get(i1));
 				i1++;
 			}
-			 Utility.writerDataToARFF(vectorFeature, listwordInVocab,s);
-			// "AlarmClock");
-			//Utility.writerDataToCSV(vectorFeature, listwordInVocab, s);
+			Utility.writerDataToARFF(vectorFeature, listwordInVocab, s);
+
 		}
-	
 	}
 
 }

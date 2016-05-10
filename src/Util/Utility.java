@@ -3,7 +3,6 @@ package Util;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FilterReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class Utility {
-	private static final String Null = null;
 
 	public static final boolean containsDigit(String s) {
 		boolean containsDigit = false;
@@ -78,19 +76,20 @@ public class Utility {
 				listWord.remove(s);
 		return listWord;
 	}
-	
-	public static double decimalFormat(double num, int n){
+
+	public static double decimalFormat(double num, int n) {
 		DecimalFormat decimalFormat = new DecimalFormat();
 		StringBuffer sb = new StringBuffer();
 		sb.append("0.");
-		for(int i = 0; i < n; i++)
+		for (int i = 0; i < n; i++)
 			sb.append("#");
 		decimalFormat.applyPattern(sb.toString());
 		decimalFormat.setMaximumFractionDigits(9);
 		double result = Double.valueOf(decimalFormat.format(num));
-		
+
 		return result;
 	}
+
 	public static void writerDataToARFF(ArrayList<String> listWords, ArrayList<String> vocab, String nameFile) {
 
 		FileWriter writer;
@@ -98,16 +97,16 @@ public class Utility {
 			writer = new FileWriter(nameFile + ".arff");
 			writer.write("@relation " + nameFile + "\n");
 			writer.write("\n");
-			for(String w : vocab){
-				writer.write("@attribute " + w + " {0,1}\n" );
+			for (String w : vocab) {
+				writer.write("@attribute " + w + " {0,1}\n");
 			}
 			writer.write("@attribute classification {POS, NEG}\n");
 			writer.write("\n");
-			writer.write("@data\n" );
+			writer.write("@data\n");
 			writer.write("\n");
 			for (String str : listWords) {
 				writer.write(str + "\n");
-				
+
 			}
 			writer.close();
 		} catch (IOException e) {
@@ -115,41 +114,85 @@ public class Utility {
 			e.printStackTrace();
 		}
 
-	} 
-	
-	public static ArrayList<String>  mergerStopWord(String stop1, String stop2){
+	}
+
+	public static ArrayList<String> mergerStopWord(String stop1, String stop2) {
 		ArrayList<String> stopWord1 = new ArrayList<String>();
 		ArrayList<String> stopWord2 = new ArrayList<String>();
 		String line = null;
-		try{
+		try {
 			// read file stopword 1
 			FileReader fd = new FileReader(stop1);
 			BufferedReader br = new BufferedReader(fd);
-			
-			while(( line = br.readLine())!= null){
+
+			while ((line = br.readLine()) != null) {
 				stopWord1.add(line.trim());
 			}
-			
+
 			// read file stopword 2
 			fd = new FileReader(stop2);
 			br = new BufferedReader(fd);
-			while(( line = br.readLine())!= null){
+			while ((line = br.readLine()) != null) {
 				stopWord2.add(line.trim());
 			}
-			
+
 			List<String> stopword = new ArrayList<String>();
 			stopword.addAll(stopWord1);
-			for(String w : stopWord2){
-				if(!stopword.contains(w))
+			for (String w : stopWord2) {
+				if (!stopword.contains(w))
 					stopword.add(w);
 			}
-			
+
 			return (ArrayList<String>) stopword;
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
-		
+
+	}
+
+	public static void writerDataToCSV(ArrayList<String> listWords, ArrayList<String> vocab, String nameFile) {
+
+		FileWriter writer;
+		try {
+			writer = new FileWriter(nameFile + ".csv");
+			String listfeature = "";
+			int i = 0;
+			for (String w : vocab) {
+				if (i == vocab.size() - 1)
+					listfeature += w + ",classification";
+				else
+					listfeature += w + ",";
+				i++;
+			}
+			writer.write(listfeature + "\n");
+			System.out.println(vocab);
+			for (String str : listWords) {
+				writer.write(str + "\n");
+
+			}
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	public static void writerReview(String nameFile, ArrayList<String> review){
+		FileWriter writer;
+		try {
+			writer = new FileWriter(nameFile + ".txt");
+			
+			for (String s : review) {
+				writer.write(s + "\n");
+			}
+			
+			
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }

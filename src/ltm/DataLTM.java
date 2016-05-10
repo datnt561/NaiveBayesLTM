@@ -20,6 +20,14 @@ public class DataLTM {
 		numberTopic = dataDist.get(0).size();
 		ndata = LtmUtil.getNTopID(dataDist, n);
 	}
+	
+	public DataLTM(String nameFile, double anpha){
+		domain = nameFile;
+		dataDist = Util.LtmUtil.readFileData(nameFile);
+		sizeDocs = dataDist.size();
+		numberTopic = dataDist.get(0).size();
+		ndata = LtmUtil.getNTopIDBySign(dataDist, anpha);
+	}
 
 	public int getSizeDocument() {
 		return sizeDocs;
